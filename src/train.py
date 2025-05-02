@@ -26,29 +26,12 @@ mse = mean_squared_error(y_test, y_pred)
 
 
 # --- Configuración de MLflow ---
-tracking_uri = ""
-if os.getenv("GITHUB_ACTIONS") == "true":
-    # Usar GITHUB_WORKSPACE para la ruta absoluta en Actions
-    github_workspace = os.environ.get("GITHUB_WORKSPACE")
-    if github_workspace:
-        # Construir la ruta absoluta para mlruns dentro del workspace
-        mlruns_path = os.path.join(github_workspace, "mlruns")
-        # Crear la URI de seguimiento (formato file:// + ruta absoluta)
-        tracking_uri = "file://" + os.path.abspath(mlruns_path)
-        print(f"GitHub Actions: Usando tracking URI: {tracking_uri}")
-    else:
-        # Fallback si GITHUB_WORKSPACE no está definido (poco probable)
-        tracking_uri = "file://" + os.path.abspath("mlruns")
-        print(f"GitHub Actions (Warning: GITHUB_WORKSPACE no encontrado): Usando tracking URI: {tracking_uri}")
-else:
-    # Ejecución local: Usar una ruta relativa es generalmente preferible
-    # Asume que el script se ejecuta desde la raíz del proyecto o el Makefile gestiona el CWD
-    tracking_uri = "file://" + os.path.abspath("mlruns")
-    # O si necesitas la ruta absoluta local específica:
-    # tracking_uri = "file:///home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/mlruns"
-    print(f"Local: Usando tracking URI: {tracking_uri}")
+import os
 
-mlflow.set_tracking_uri(tracking_uri)
+# Asegura que todo lo que se guarde, se quede dentro del repo
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+mlflow.set_tracking_uri("file://" + os.path.abspath("../mlruns"))
+
 mlflow.set_experiment("CI-CD-Lab")
 
 
@@ -57,7 +40,8 @@ mlflow.set_experiment("CI-CD-Lab")
 with mlflow.start_run():
     mlflow.log_param("model", "LinearRegression")
     mlflow.log_metric("mse", mse)
+    model_path = "model.pkl"
     joblib.dump(model, "model.pkl")
-    mlflow.sklearn.log_model(model, "model", registered_model_name="ci-cd-model")
+    mlflow.log_artifact(model_path, artifact_path="model") # Guarda model.pkl dentro de una carpeta 'model' en los artefactos
 
 print(f"✅ Entrenamiento completo. MSE: {mse:.4f}")
