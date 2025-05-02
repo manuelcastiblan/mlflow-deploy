@@ -8,12 +8,11 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 from mlflow.models import infer_signature
 
-# ✅ Crear carpeta segura local para los artefactos
-mlruns_path = os.path.join(os.getcwd(), "mlruns")
-os.makedirs(mlruns_path, exist_ok=True)
+import tempfile
 
-# ✅ Establecer URI en ruta controlada
+mlruns_path = tempfile.mkdtemp(prefix="mlruns_")
 mlflow.set_tracking_uri("file://" + mlruns_path)
+
 mlflow.set_experiment("CI-CD-Lab")
 
 # Cargar datos y entrenar modelo
