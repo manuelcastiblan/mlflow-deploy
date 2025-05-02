@@ -24,8 +24,10 @@ y_pred = model.predict(X_test)
 
 mse = mean_squared_error(y_test, y_pred)
 
-mlflow.set_tracking_uri("file:///home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/mlruns")
+# Cambia la URI de seguimiento a una ruta relativa
+mlflow.set_tracking_uri("file:./mlruns") # O simplemente "./mlruns"
 mlflow.set_experiment("CI-CD-Lab")
+
 
 
 with mlflow.start_run():
