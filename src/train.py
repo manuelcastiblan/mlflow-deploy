@@ -24,24 +24,26 @@ y_pred = model.predict(X_test)
 
 mse = mean_squared_error(y_test, y_pred)
 
-
-# --- Configuración de MLflow ---
-import os
-
-# Asegura que todo lo que se guarde, se quede dentro del repo
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-mlflow.set_tracking_uri("file://" + os.path.abspath("../mlruns"))
-
+tracking_uri = "file:./mlruns"
+print(f"Setting MLflow tracking URI to: {tracking_uri}") # Debugging
+mlflow.set_tracking_uri(tracking_uri)
 mlflow.set_experiment("CI-CD-Lab")
 
-
-
-
-with mlflow.start_run():
+# --- Ejecución de MLflow ---
+with mlflow.start_run() as run:
+    print(f"MLflow Run ID: {run.info.run_id}")
+    print(f"MLflow Artifact URI: {run.info.artifact_uri}") # Debugging
     mlflow.log_param("model", "LinearRegression")
     mlflow.log_metric("mse", mse)
+
+    # Guarda el modelo en la raíz del proyecto (donde se ejecuta 'make')
+    # Esto coincide con lo que espera el paso de upload-artifact del workflow
     model_path = "model.pkl"
-    joblib.dump(model, "model.pkl")
-    mlflow.log_artifact(model_path, artifact_path="model") # Guarda model.pkl dentro de una carpeta 'model' en los artefactos
+    joblib.dump(model, model_path)
+    print(f"Model saved locally to: {os.path.abspath(model_path)}") # Debugging
+
+    # Registra el artefacto desde la raíz del proyecto
+    mlflow.log_artifact(model_path, artifact_path="model")
+    print(f"Artifact logged to MLflow path: model") # Debugging
 
 print(f"✅ Entrenamiento completo. MSE: {mse:.4f}")
