@@ -24,15 +24,14 @@ y_pred = model.predict(X_test)
 
 mse = mean_squared_error(y_test, y_pred)
 
-# Construir una ruta absoluta para mlruns dentro del workspace de GitHub Actions
-workspace_path = os.environ.get("GITHUB_WORKSPACE", ".") # Usar "." como fallback si no está en Actions
-mlruns_path = os.path.join(workspace_path, "mlruns")
-# Crear la URI de seguimiento con la ruta absoluta (asegurándose de que sea un URI de archivo válido)
-# No es necesario 'file:///' si os.path.join ya da una ruta absoluta POSIX
-tracking_uri = "file:" + os.path.abspath(mlruns_path)
+import os
 
-print(f"Setting MLflow tracking URI to: {tracking_uri}") # Añadir log para depuración
-mlflow.set_tracking_uri(tracking_uri)
+if os.getenv("GITHUB_ACTIONS") == "true":
+    # Tracking relativo para GitHub Actions
+    mlflow.set_tracking_uri("file://" + os.path.abspath("mlruns"))
+else:
+    # Ruta fija para uso local
+    mlflow.set_tracking_uri("file:///home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/mlruns")
 mlflow.set_experiment("CI-CD-Lab")
 
 
