@@ -1,0 +1,15 @@
+artifact_uri: file:///home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/mlruns/884468648302199857/8e61740a816c43f68f674525ae727038/artifacts
+end_time: 1746218923754
+entry_point_name: ''
+experiment_id: '884468648302199857'
+lifecycle_stage: active
+run_id: 8e61740a816c43f68f674525ae727038
+run_name: gentle-sloth-458
+run_uuid: 8e61740a816c43f68f674525ae727038
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746218922331
+status: 3
+tags: []
+user_id: manuelcastiblan

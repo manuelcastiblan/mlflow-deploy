@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1746218923751
+current_stage: None
+description: null
+last_updated_timestamp: 1746218923751
+name: ci-cd-model
+run_id: 8e61740a816c43f68f674525ae727038
+run_link: null
+source: file:///home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/mlruns/884468648302199857/8e61740a816c43f68f674525ae727038/artifacts/model
+status: READY
+status_message: null
+storage_location: file:///home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/mlruns/884468648302199857/8e61740a816c43f68f674525ae727038/artifacts/model
+user_id: null
+version: 1
