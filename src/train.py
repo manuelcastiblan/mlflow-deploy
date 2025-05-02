@@ -32,7 +32,7 @@ os.makedirs(mlruns_dir, exist_ok=True)
 mlflow.set_tracking_uri(tracking_uri)
 
 # --- Crear o Establecer Experimento Explícitamente con Artifact Location ---
-experiment_name = "CI-CD-Lab"
+experiment_name = "CI-CD-Lab2"
 try:
     # Intentar crear el experimento, proporcionando la ubicación del artefacto
     experiment_id = mlflow.create_experiment(
