@@ -8,10 +8,14 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 from mlflow.models import infer_signature
 
-import tempfile
 
-mlruns_path = tempfile.mkdtemp(prefix="mlruns_")
+# Crear una carpeta mlruns en la raíz del proyecto
+mlruns_path = os.path.abspath("mlruns")
+os.makedirs(mlruns_path, exist_ok=True)
+
+# Usar esta ruta como el backend local de tracking
 mlflow.set_tracking_uri("file://" + mlruns_path)
+
 
 mlflow.set_experiment("CI-CD-Lab")
 
