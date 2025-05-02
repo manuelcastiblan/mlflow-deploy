@@ -29,9 +29,10 @@ jobs:
       - name: ✅ Validar desempeño del modelo
         run: make validate
 
-      - name: 📤 Subir modelo como artefacto (si pasa validación)
+      - name: 📤 Subir modelo como artefacto
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: modelo-validado
           path: model.pkl
+
