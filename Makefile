@@ -1,5 +1,6 @@
+# filepath: /home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/Makefile
 train:
-	python train.py
+    python src/train.py  # O la ruta correcta a tu script
 
 validate:
-	python validate.py
+    python src/validate.py # O la ruta correcta a tu script
