@@ -9,12 +9,11 @@ import pandas as pd
 from mlflow.models import infer_signature
 
 
-# Crear una carpeta mlruns en la raíz del proyecto
-mlruns_path = os.path.abspath("mlruns")
-os.makedirs(mlruns_path, exist_ok=True)
+# Este path está dentro del workspace de GitHub Actions
+mlflow_tracking_dir = os.path.join(os.getcwd(), "mlruns")
+os.makedirs(mlflow_tracking_dir, exist_ok=True)
+mlflow.set_tracking_uri("file://" + mlflow_tracking_dir)
 
-# Usar esta ruta como el backend local de tracking
-mlflow.set_tracking_uri("file://" + mlruns_path)
 
 
 mlflow.set_experiment("CI-CD-Lab")
@@ -38,7 +37,6 @@ with mlflow.start_run():
     mlflow.sklearn.log_model(
         sk_model=model,
         artifact_path="model",
-        registered_model_name="modelo-diabetes-ci",
         signature=signature,
         input_example=input_example
     )
