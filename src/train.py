@@ -19,16 +19,16 @@ model = LinearRegression()
 model.fit(X_train, y_train)
 preds = model.predict(X_test)
 mse = mean_squared_error(y_test, preds)
-
-# Iniciar experimento
-with mlflow.start_run():
+with mlflow.start_run() as run: # Añadir 'as run' para obtener info si es necesario
+    print(f"MLflow Run ID: {run.info.run_id}")
+    print(f"MLflow Artifact URI (from run info): {run.info.artifact_uri}") # Debugging
     mlflow.log_metric("mse", mse)
 
-    # Loggear modelo directamente desde memoria
+    # Loggear modelo SIN registrarlo temporalmente
+    print("Attempting to log model artifact (without registration)...") # Debugging
     mlflow.sklearn.log_model(
         sk_model=model,
-        artifact_path="model",
-        registered_model_name="modelo-diabetes-ci"
+        artifact_path="model" # Solo guardar como artefacto
+        # registered_model_name="modelo-diabetes-ci" # <- COMENTADO TEMPORALMENTE
     )
-
-    print(f"✅ Modelo registrado con MSE: {mse:.4f}")
+    print("Model artifact logged successfully (without registration).") # Debugging
