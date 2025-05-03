@@ -1,0 +1,6 @@
+artifact_location: file:///home/runner/work/mlflow-deploy/mlflow-deploy/mlruns
+creation_time: 1746304931564
+experiment_id: '743361678068391915'
+last_update_time: 1746304931564
+lifecycle_stage: active
+name: CI-CD-Lab2
