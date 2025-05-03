@@ -32,7 +32,7 @@ model_path = os.path.abspath(os.path.join(os.getcwd(), model_filename))
 print(f"--- Debug: Intentando cargar modelo desde: {model_path} ---") # Añadir debug
 
 try:
-    model = joblib.load(model_path)
+    model = joblib.load('/home/runner/work/mlflow-deploy/mlflow-deploy/model.pkl')
 except FileNotFoundError:
     print(f"--- ERROR: No se encontró el archivo del modelo en '{model_path}'. Asegúrate de que el paso 'make train' lo haya guardado correctamente en la raíz del proyecto. ---")
     # Listar archivos en el directorio actual para depuración
