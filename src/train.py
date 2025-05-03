@@ -9,12 +9,13 @@ import pandas as pd
 from mlflow.models import infer_signature
 import sys
 import traceback
+import joblib
 
 print(f"--- Debug: Initial CWD: {os.getcwd()} ---")
 
 # --- Define Paths ---
 # Usar rutas absolutas dentro del workspace del runner
-workspace_dir = os.getcwd() # Debería ser /home/runner/work/mlflow-deploy/mlflow-deploy
+workspace_dir = os.getcwd() 
 mlruns_dir = os.path.join(workspace_dir, "mlruns")
 tracking_uri = "file://" + os.path.abspath(mlruns_dir)
 # Definir explícitamente la ubicación base deseada para los artefactos
@@ -75,11 +76,11 @@ preds = model.predict(X_test)
 mse = mean_squared_error(y_test, preds)
 
 # --- Iniciar Run de MLflow ---
-print(f"--- Debug: Iniciando run de MLflow en Experimento ID: {experiment_id} ---") # Añadir ID aquí
+print(f"--- Debug: Iniciando run de MLflow en Experimento ID: {experiment_id} ---")
 run = None
 try:
     # Iniciar el run PASANDO EXPLÍCITAMENTE el experiment_id
-    with mlflow.start_run(experiment_id=experiment_id) as run: # <--- CAMBIO CLAVE
+    with mlflow.start_run(experiment_id=experiment_id) as run:
         run_id = run.info.run_id
         actual_artifact_uri = run.info.artifact_uri
         print(f"--- Debug: Run ID: {run_id} ---")
@@ -93,15 +94,26 @@ try:
         if "/home/manuelcastiblan/" in actual_artifact_uri:
              print(f"--- ¡¡¡ERROR CRÍTICO!!!: La URI del Artefacto del Run '{actual_artifact_uri}' TODAVÍA contiene la ruta local incorrecta! ---")
 
-
         mlflow.log_metric("mse", mse)
-        print(f"--- Debug: Intentando log_model con artifact_path='model' ---")
 
+        # --- GUARDAR MODELO LOCALMENTE EN LA RAÍZ ---
+        model_path_absolute = os.path.abspath("model.pkl") # Ruta absoluta en la raíz
+        print(f"--- Debug: Guardando modelo localmente en: {model_path_absolute} ---")
+        try:
+            joblib.dump(model, model_path_absolute)
+            print("--- Debug: Modelo guardado localmente exitosamente. ---")
+        except Exception as dump_err:
+            print(f"--- ERROR al guardar el modelo localmente: {dump_err} ---")
+            traceback.print_exc()
+            sys.exit(1) # Fallar si no se puede guardar localmente
+        # --- FIN GUARDAR MODELO LOCALMENTE ---
+
+        print(f"--- Debug: Intentando log_model (MLflow) con artifact_path='model' ---")
         mlflow.sklearn.log_model(
             sk_model=model,
-            artifact_path="model"
+            artifact_path="model" # Guarda dentro de la estructura de artefactos de MLflow
         )
-        print(f"✅ Modelo registrado correctamente. MSE: {mse:.4f}")
+        print(f"✅ Modelo loggeado a MLflow y guardado localmente. MSE: {mse:.4f}")
 
 except Exception as e:
     print(f"\n--- ERROR durante la ejecución de MLflow ---")
@@ -109,7 +121,7 @@ except Exception as e:
     print(f"--- Fin de la Traza de Error ---")
     print(f"CWD actual en el error: {os.getcwd()}")
     print(f"Tracking URI usada: {mlflow.get_tracking_uri()}")
-    print(f"Experiment ID intentado: {experiment_id}") # Añadir ID aquí
+    print(f"Experiment ID intentado: {experiment_id}")
     if run:
          print(f"URI del Artefacto del Run en el error: {run.info.artifact_uri}")
     else:

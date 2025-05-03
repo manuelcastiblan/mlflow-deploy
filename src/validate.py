@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # --- Cargar modelo previamente entrenado ---
 # Construir la ruta absoluta al modelo esperado en la raíz del proyecto
-model_filename = "model.pkl"
+model_filename = "mlflow-deploy/src/mlruns/model.pkl"
 # os.getcwd() debería ser la raíz del proyecto cuando se ejecuta con 'make'
 model_path = os.path.abspath(os.path.join(os.getcwd(), model_filename))
 

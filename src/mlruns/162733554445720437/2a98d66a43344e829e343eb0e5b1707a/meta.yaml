@@ -1,0 +1,15 @@
+artifact_uri: file:///home/manuelcastiblan/academic/mlflow-deploy/mlflow-deploy/src/mlruns/2a98d66a43344e829e343eb0e5b1707a/artifacts
+end_time: 1746231451432
+entry_point_name: ''
+experiment_id: '162733554445720437'
+lifecycle_stage: active
+run_id: 2a98d66a43344e829e343eb0e5b1707a
+run_name: treasured-croc-268
+run_uuid: 2a98d66a43344e829e343eb0e5b1707a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1746231448819
+status: 3
+tags: []
+user_id: manuelcastiblan
