@@ -8,6 +8,9 @@ jobs:
   ml_pipeline:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write # Permite escribir en el repositorio (git push)
+
     steps:
       - name: 📥 Clonar repositorio
         uses: actions/checkout@v4 # Usar v4 o superior
