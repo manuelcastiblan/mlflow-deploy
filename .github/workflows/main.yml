@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: 📥 Clonar repositorio
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Usar v4 o superior
 
       - name: 🐍 Configurar Python
         uses: actions/setup-python@v4
@@ -21,17 +21,37 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install mlflow joblib scikit-learn pandas
+          # No necesitas instalar mlflow, joblib, etc. aquí si ya están en requirements.txt
+          # pip install mlflow joblib scikit-learn pandas
 
       - name: 🧪 Entrenar modelo
         run: make train
 
-      - name: Validar desempeño del modelo
+      - name: ✅ Validar desempeño del modelo
         run: make validate
 
-      - name: 📤 Subir modelo como artefacto (si pasa validación)
+      - name: 📤 Subir modelo .pkl como artefacto (si pasa validación)
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: modelo-validado
+          name: modelo-pkl
           path: model.pkl
+
+      # --- NUEVOS PASOS PARA ACTUALIZAR MLRUNS ---
+      - name: ⚙️ Configurar Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: ✨ Añadir cambios en mlruns
+        run: git add mlruns
+
+      - name: 📝 Confirmar cambios en mlruns (si existen)
+        # Ejecuta commit solo si hay cambios en mlruns para evitar commits vacíos
+        run: |
+          git diff --staged --quiet || git commit -m "Actualizar mlruns con resultados de ejecución [skip ci]"
+
+      - name: 🚀 Empujar cambios a main
+        # Empuja solo si hubo un commit en el paso anterior
+        run: git push origin main
+      # --- FIN NUEVOS PASOS ---
