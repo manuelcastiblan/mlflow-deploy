@@ -25,14 +25,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 # --- Cargar modelo previamente entrenado ---
 # Construir la ruta absoluta al modelo esperado en la raíz del proyecto
-model_filename = "mlflow-deploy/src/mlruns/model.pkl"
+model_filename = "model.pkl"
 # os.getcwd() debería ser la raíz del proyecto cuando se ejecuta con 'make'
 model_path = os.path.abspath(os.path.join(os.getcwd(), model_filename))
 
 print(f"--- Debug: Intentando cargar modelo desde: {model_path} ---") # Añadir debug
 
 try:
-    model = joblib.load('/home/runner/work/mlflow-deploy/mlflow-deploy/model.pkl')
+    model = joblib.load(model_path)
 except FileNotFoundError:
     print(f"--- ERROR: No se encontró el archivo del modelo en '{model_path}'. Asegúrate de que el paso 'make train' lo haya guardado correctamente en la raíz del proyecto. ---")
     # Listar archivos en el directorio actual para depuración
